@@ -1,5 +1,12 @@
-function renderTable(hasil) {
+function renderAPI(hasil) {
   let covidTableEl = document.getElementById("covidTable");
+  let positifEl = document.getElementById("totalPositif");
+  let sembuhEl = document.getElementById("totalSembuh");
+  let meninggalEl = document.getElementById("totalMeninggal");
+
+  let countPositifEl = 0;
+  let countSembuhEl = 0;
+  let countMeninggalEl = 0;
 
   hasil.forEach((el) => {
     covidTableEl.innerHTML += `
@@ -9,51 +16,19 @@ function renderTable(hasil) {
     <td class="text-end">${el.kasusSemb}</td>
     <td class="text-end">${el.kasusMeni}</td>
     </tr> `;
+    countPositifEl += Number(el.kasusPosi);
+    countSembuhEl += Number(el.kasusSemb);
+    countMeninggalEl += Number(el.kasusMeni);
   });
-}
 
-function hitungPositif(hasil) {
-  let countEl = 0;
-
-  hasil.forEach((el) => {
-    countEl += Number(el.kasusPosi);
-  });
-  return countEl;
-}
-
-function hitungSembuh(hasil) {
-  let countEl = 0;
-
-  hasil.forEach((el) => {
-    countEl += Number(el.kasusSemb);
-  });
-  return countEl;
-}
-
-function hitungMeninggal(hasil) {
-  let countEl = 0;
-
-  hasil.forEach((el) => {
-    countEl += Number(el.kasusMeni);
-  });
-  return countEl;
+  positifEl.innerText += countPositifEl;
+  sembuhEl.innerText += countSembuhEl;
+  meninggalEl.innerText += countMeninggalEl;
 }
 
 fetch("https://indonesia-covid-19.mathdro.id/api/provinsi")
   .then((response) => response.json())
   .then((el) => el.data)
   .then((hasil) => {
-    renderTable(hasil);
-
-    let jumlahPositif = hitungPositif(hasil);
-    let positifEl = document.getElementById("totalPositif");
-    positifEl.innerText += jumlahPositif;
-
-    let jumlahSembuh = hitungSembuh(hasil);
-    let sembuhEl = document.getElementById("totalSembuh");
-    sembuhEl.innerText += jumlahSembuh;
-
-    let jumlahMeninggal = hitungMeninggal(hasil);
-    let meninggalEl = document.getElementById("totalMeninggal");
-    meninggalEl.innerText += jumlahMeninggal;
+    renderAPI(hasil);
   });
